@@ -1,0 +1,49 @@
+name: Sample github workflow
+on:
+  workflow_dispatch:
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:    # NOTE
+      id-token: write
+      contents: read
+    defaults:
+      run:
+        working-directory: Terraform
+
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v5.0.0
+     
+     - name: Setup Terraform
+       uses: hashicorp/setup-terraform@v3
+       with:
+          terraform_version: 1.5.0
+     
+     - name: "Configure AWS Credentials"
+       uses: aws-actions/configure-aws-credentials@v4
+       with:
+         aws-region: us-east-1
+         role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}  #created a secret for storing role_arn. ARN of the role to assume.
+         # aws-access-key-id: ${{ secrets.ACCESS_KEY }}
+         # aws-secret-access-key: ${{ secrets.SECRET_KEY }}
+
+     - name: Test AWS Connection
+       run:  aws sts get-caller-identity # if it is succeeded , it will show assumed IAM role. It will fail if you slct another branch bcz in OIDC we gave main branch
+        
+     - name: init
+       run: terraform init
+       
+     - name: validate
+       run: terraform validate
+  
+     - name: apply
+       run: terraform apply -auto-approve
+
+     # - name: destroy
+     #   run: terraform destroy
+      
+      
+        
