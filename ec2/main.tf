@@ -1,6 +1,16 @@
+data "aws_ami" "amazon_linux2" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+}
+
 resource "aws_instance" "ec2_dev"{
 
-   ami                    = "ami-00ca32bbc84273381"
+   ami                    = data.aws_ami.amazon_linux2.id
    #count                  = length(var.subnet_id)   # note
    instance_type          = var.instance_type
    #subnet_id              = var.subnet_id[count.index]  # note
