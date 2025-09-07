@@ -9,10 +9,6 @@ jobs:
     permissions:    # NOTE
       id-token: write
       contents: read
-    # defaults:
-    #   run:
-    #     working-directory: Terraform
-
     steps:
      - name: Checkout
        uses: actions/checkout@v5.0.0
@@ -33,17 +29,6 @@ jobs:
      - name: Test AWS Connection
        run:  aws sts get-caller-identity # if it is succeeded , it will show assumed IAM role. It will fail if you slct another branch bcz in OIDC we gave main branch
         
-     # - name: init
-     #   run: terraform init
-       
-     # - name: validate
-     #   run: terraform validate
-  
-     # - name: apply
-     #   run: terraform apply -auto-approve
-
-     # # - name: destroy
-     #   run: terraform destroy
       
       
         
