@@ -15,7 +15,7 @@ resource "aws_instance" "ec2_dev"{
    instance_type          = var.instance_type
    #subnet_id              = var.subnet_id[count.index]  # note
    vpc_security_group_ids = [aws_security_group.ec2_sec_gp.id] #var.security_gp
-   user_data              = file("nginx.sh")  #Note
+   user_data              = file("nginx2.sh")  #Note
    tags = {
      Name                 = "myec2" #"ec2-${count.index + 1 }"
 } 
