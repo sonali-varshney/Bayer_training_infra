@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "test-s3" 
+    bucket = "test-s3-terraform-use-case1" 
     key    = "/dev"
     region = "us-east-1"
     #profile= ""
