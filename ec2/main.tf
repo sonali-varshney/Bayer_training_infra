@@ -18,7 +18,7 @@ resource "aws_instance" "ec2_dev"{
 resource "aws_security_group" "ec2_sec_gp" {
   name        = "ec2_sec_gp"
   description = "Allow TLS inbound traffic and all outbound traffic"
-  vpc_id      = aws_vpc.vpcdemo.id
+ # vpc_id      = aws_vpc.vpcdemo.id
 
   tags = {
     Name = "ec2_secgp"
