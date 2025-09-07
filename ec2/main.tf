@@ -4,7 +4,7 @@ resource "aws_instance" "ec2_dev"{
    #count                  = length(var.subnet_id)   # note
    instance_type          = var.instance_type
    #subnet_id              = var.subnet_id[count.index]  # note
-   vpc_security_group_ids = "aws_security_group.ec2_sec_gp.id" #var.security_gp
+   vpc_security_group_ids = ["aws_security_group.ec2_sec_gp.id"] #var.security_gp
    user_data              = file("nginx.sh")  #Note
    tags = {
      Name                 = "myec2" #"ec2-${count.index + 1 }"
@@ -48,5 +48,6 @@ resource "aws_security_group" "ec2_sec_gp" {
     to_port = 0
     protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+
   }
 }
