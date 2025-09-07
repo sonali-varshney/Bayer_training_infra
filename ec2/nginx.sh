@@ -1,40 +1,35 @@
+#!/bin/bash
+# Update system
+yum update -y
 
-sudo yum update -y
-sudo yum install epel-release -y
-sudo yum install nginx -y
-sudo systemctl start nginx
-sudo systemctl enable nginx
+# Install nginx (Amazon Linux 2 uses amazon-linux-extras)
+amazon-linux-extras install -y nginx1
 
- # Create custom content
+# Enable & start nginx
+systemctl enable nginx
+systemctl start nginx
+
+# Create custom content under /usr/share/nginx/html/images
 mkdir -p /usr/share/nginx/html/images
 echo "<h1>Hello Images!</h1>" > /usr/share/nginx/html/images/index.html
 
-      
-# Create a new Nginx configuration file for the /images path
-# Using a custom conf.d file is a best practice
-cat << 'EOF' | sudo tee /etc/nginx/conf.d/images.conf
+# Configure nginx
+cat << 'EOF' > /etc/nginx/conf.d/images.conf
 server {
     listen 80;
     server_name _;
 
-    # Default website content
-    location / {
-        root /var/www/html;
-        index index.html;
-    }
+    # Default root
+    root /usr/share/nginx/html;
+    index index.html;
 
-    # Configuration for the /images path
+    # /images path
     location /images/ {
-        # 'alias' maps the URI path to a specific filesystem path
-        alias /usr/share/nginx/images/;
+        alias /usr/share/nginx/html/images/;
+        index index.html;
     }
 }
 EOF
 
-
-
-# Restart Nginx to apply the new configuration
-sudo systemctl restart nginx
-
-
-
+# Restart nginx to apply config
+systemctl restart nginx
