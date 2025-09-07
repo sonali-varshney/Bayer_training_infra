@@ -1,13 +1,13 @@
 resource "aws_instance" "ec2_dev"{
 
-   ami                    = ami-00ca32bbc84273381
+   ami                    = "ami-00ca32bbc84273381"
    #count                  = length(var.subnet_id)   # note
    instance_type          = var.instance_type
    #subnet_id              = var.subnet_id[count.index]  # note
    vpc_security_group_ids = aws_security_group.ec2_sec_gp.id#var.security_gp
    user_data              = file("nginx.sh")  #Note
    tags = {
-     Name                 = myec2 #"ec2-${count.index + 1 }"
+     Name                 = "myec2" #"ec2-${count.index + 1 }"
 }
  
 }
