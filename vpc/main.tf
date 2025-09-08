@@ -78,3 +78,58 @@ resource "aws_route_table_association" "associate_with_prv_subnet" {
   route_table_id = aws_route_table.priv_route_table.id
 }
 
+
+
+#Create Subnet group
+resource "aws_db_subnet_group" "db_subnet_group" {
+  name       = "main"
+  subnet_ids =  [aws_subnet.prv_subnet[*].id]   #Note
+
+  tags = {
+    Name = "My DB subnet group"
+  }
+}
+
+#Create MYSQL DB
+resource "aws_db_instance" "default" {
+  allocated_storage    = 10
+  db_name              = "mydb"
+  engine               = "mysql"
+  engine_version       = "8.0"
+  instance_class       = "db.t3.micro"
+  username             = "foo"
+  password             = "foobarbaz"
+  parameter_group_name = "default.mysql8.0"
+  skip_final_snapshot  = true
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.name
+  publicly_accessible  = false # Ensure RDS is not publicly accessible
+}
+
+
+resource "aws_security_group" "db_sec_gp" {
+  name        = "db_sec_gp"
+  description = "Allow TLS inbound traffic and all outbound traffic"
+ # vpc_id      = aws_vpc.vpcdemo.id
+
+  tags = {
+    Name = "db_secgp"
+  }
+
+  # Allow SSH access from anywhere (you can restrict this to your IP)
+  ingress {
+    from_port = 3306
+    to_port = 3306
+    protocol = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]  # You can change this to your IP for better security
+ #security_groups = [aws_security_group.alb_sec_gp.id]  # Only allow traffic from the ALB's security group
+  }
+
+  # Allow all outbound traffic
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+
+  }
+}
