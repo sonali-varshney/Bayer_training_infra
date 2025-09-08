@@ -35,10 +35,21 @@ jobs:
         
      - name: init
        run: terraform init
-       
-     # - name: validate
-     #   run: terraform validate
+     - name: validate
+       run: terraform validate
+     - name: Setup TFLint
+       uses: terraform-linters/setup-tflint@v5.0.0
+       with:
+         tflint_version: latest # TFLint version to install. optional, default is latest
+         #github_token: ${{ secrets.GITHUB_TOKEN }} # GitHub token - used when getting the latest version of tflint
   
+     - name: Init TFLint
+       run: tflint --init
+
+     - name: Run TFLint
+       run: tflint -f compact --recursive
+       continue-on-error: true # Allow TFLint to run to completion and post results
+       
      # - name: apply
      #   run: terraform apply -auto-approve
 
