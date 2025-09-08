@@ -40,7 +40,7 @@ resource "aws_route_table" "pub_route_table" {
 }
 
 
-resource "aws_route_table_association" "associate_with_subnet" {
+resource "aws_route_table_association" "associate_with_pub_subnet" {
   count          = length(var.pub_cidr_block)                             #NOTE
   subnet_id      = element(aws_subnet.pubsubnet[*].id, count.index)   #NOTE
   route_table_id = aws_route_table.pub_route_table.id
@@ -73,7 +73,7 @@ resource "aws_route_table" "priv_route_table" {
   }
 }
 
-resource "aws_route_table_association" "associate_with_subnet" {
+resource "aws_route_table_association" "associate_with_prv_subnet" {
   subnet_id      = element(aws_subnet.prv_subnet[*].id, count.index)
   route_table_id = aws_route_table.priv_route_table.id
 }
