@@ -136,7 +136,7 @@ resource "aws_security_group" "db_sec_gp" {
 
 resource "aws_instance" "web_instance" {
   count = length(var.pub_cidr_block)
-  ami = "ami-053b04d4452140a34" # Example AMI for Amazon Linux 2023 (Free Tier eligible)
+  ami = "ami-00ca32bbc84273381" # Example AMI for Amazon Linux 2023 (Free Tier eligible)
   instance_type = "t3.micro"
   subnet_id = element(aws_subnet.pubsubnet[*].id, count.index)
   vpc_security_group_ids = [aws_security_group.web_sg.id]
