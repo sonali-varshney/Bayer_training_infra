@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ec2
+        working-directory: vpc
 
     permissions:    # NOTE
       id-token: write
