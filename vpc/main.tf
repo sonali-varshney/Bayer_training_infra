@@ -84,7 +84,7 @@ resource "aws_route_table_association" "associate_with_prv_subnet" {
 #Create Subnet group
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "main"
-  subnet_ids =  [aws_subnet.prv_subnet[*].id]   #Note
+  subnet_ids =  aws_subnet.prv_subnet[*].id   #Note
 
   tags = {
     Name = "My DB subnet group"
