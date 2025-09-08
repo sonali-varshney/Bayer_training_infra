@@ -7,7 +7,7 @@ resource "aws_vpc" "vpcdemo" {
 
 resource "aws_subnet" "pubsubnet" {
   vpc_id     = aws_vpc.vpcdemo.id
-  count      = length[var.pub_cidr_block]                      #Note
+  count      = length(var.pub_cidr_block)                      #Note
 
   cidr_block = var.pub_cidr_block[count.index]                #Note
   availability_zone = var.pub_availability_zone[count.index]  #Note
@@ -49,7 +49,7 @@ resource "aws_route_table_association" "associate_with_pub_subnet" {
 
 resource "aws_subnet" "prv_subnet" {
   vpc_id     = aws_vpc.vpcdemo.id
-  count      = length[var.prv_cidr_block]                      #Note
+  count      = length(var.prv_cidr_block)                      #Note
 
   cidr_block = var.prv_cidr_block[count.index]                #Note
   availability_zone = var.prv_availability_zone[count.index]  #Note
@@ -130,6 +130,5 @@ resource "aws_security_group" "db_sec_gp" {
     to_port = 0
     protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-
   }
 }
