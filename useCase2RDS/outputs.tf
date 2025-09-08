@@ -1,3 +1,3 @@
-outputs "pubsubnet"{
+output "pubsubnet"{
     value = module.vpc.pubsubnet[*].id
 }
