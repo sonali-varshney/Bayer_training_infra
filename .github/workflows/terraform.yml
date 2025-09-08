@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: vpc
+        working-directory: useCase2RDS/vpc
 
     permissions:    # NOTE
       id-token: write
