@@ -121,7 +121,62 @@ resource "aws_security_group" "db_sec_gp" {
     from_port = 3306
     to_port = 3306
     protocol = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]  # You can change this to your IP for better security
+    #cidr_blocks = ["10.0.0.0/16"]  # You can change this to your IP for better security
+    security_groups = [aws_security_group.web_sg.id]  # Only allow traffic from the ALB's security group
+  }
+
+  # Allow all outbound traffic
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_instance" "web_instance" {
+  count = length(var.pub_cidr_block)
+  ami = "ami-053b04d4452140a34" # Example AMI for Amazon Linux 2023 (Free Tier eligible)
+  instance_type = "t3.micro"
+  subnet_id = element(aws_subnet.pubsubnet[*].id, count.index)
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
+
+  user_data = <<-EOF
+    #!/bin/bash
+    yum update -y
+    amazon-linux-extras install nginx1.12 -y
+    systemctl start nginx
+    systemctl enable nginx
+  EOF
+
+  tags = {
+    Name = "nginx-instance-${count.index}"
+  }
+}
+
+resource "aws_security_group" "web_sg" {
+  name        = "web_sec_gp"
+  description = "Allow TLS inbound traffic and all outbound traffic"
+ # vpc_id      = aws_vpc.vpcdemo.id
+
+  tags = {
+    Name = "ec2_secgp"
+  }
+
+  # Allow SSH access from anywhere (you can restrict this to your IP)
+  ingress {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # You can change this to your IP for better security
+ #security_groups = [aws_security_group.alb_sec_gp.id]  # Only allow traffic from the ALB's security group
+  }
+
+    ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # You can change this to your IP for better security
  #security_groups = [aws_security_group.alb_sec_gp.id]  # Only allow traffic from the ALB's security group
   }
 
@@ -133,3 +188,5 @@ resource "aws_security_group" "db_sec_gp" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+

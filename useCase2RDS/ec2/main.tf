@@ -1,7 +1,8 @@
 resource "aws_instance" "web_server_1" {
+  count         = length(var.pub_cidr_block)
   ami           = "ami-00ca32bbc84273381"
   instance_type = "t2.micro"
-  subnet_id     = aws_subnet.public_subnet1.id 
+  subnet_id     =  var.subnet_id #aws_subnet.public_subnet1.id 
   #key_name      = "k8s.pem" 
   vpc_security_group_ids = [aws_security_group.alb_sg.id]
   associate_public_ip_address = true
