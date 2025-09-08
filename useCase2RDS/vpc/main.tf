@@ -110,7 +110,7 @@ resource "aws_db_instance" "default" {
 resource "aws_security_group" "db_sec_gp" {
   name        = "db_sec_gp"
   description = "Allow TLS inbound traffic and all outbound traffic"
- # vpc_id      = aws_vpc.vpcdemo.id
+  vpc_id      = aws_vpc.vpcdemo.id
 
   tags = {
     Name = "db_secgp"
@@ -157,7 +157,7 @@ resource "aws_instance" "web_instance" {
 resource "aws_security_group" "web_sg" {
   name        = "web_sec_gp"
   description = "Allow TLS inbound traffic and all outbound traffic"
- # vpc_id      = aws_vpc.vpcdemo.id
+  vpc_id      = aws_vpc.vpcdemo.id
 
   tags = {
     Name = "ec2_secgp"
