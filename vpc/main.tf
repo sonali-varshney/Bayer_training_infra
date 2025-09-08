@@ -74,6 +74,7 @@ resource "aws_route_table" "priv_route_table" {
 }
 
 resource "aws_route_table_association" "associate_with_prv_subnet" {
+  count          = length(var.prv_cidr_block) 
   subnet_id      = element(aws_subnet.prv_subnet[*].id, count.index)
   route_table_id = aws_route_table.priv_route_table.id
 }
